@@ -18,6 +18,9 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,30 +28,44 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-          cache: 'pip'
+          python-version: '3.11'
+          cache: pip
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Get VPN Gate nodes + check via Cloudflare Worker + build page
-        run: python vpngate.py
+      - name: Validate worker secret
         env:
-          CHECK_WORKER: ${{ secrets.DOMAIN }}
-          CHECK_CONCURRENCY: "5"
-          CHECK_TIMEOUT: "30"
+          DOMAIN: ${{ secrets.DOMAIN }}
+        run: |
+          if [ -z "${DOMAIN}" ]; then
+            echo "::error::未配置检测地址。请在仓库 Settings → Secrets and variables → Actions 中新增 Secret：DOMAIN（只填 Worker 的 host，例如 abc.workers.dev）"
+            exit 1
+          fi
+          echo "检测域名已配置：${DOMAIN}"
 
-      - name: Configure Pages
+      - name: Run pipeline
+        env:
+          CHECK_WORKER: "https://${{ secrets.DOMAIN }}/check?sstp=vpn:vpn@"
+          CHECK_CONCURRENCY: "8"
+          CHECK_TIMEOUT: "25"
+          MAX_CHECK_NODES: "0"
+          MIN_SUCCESS_RATIO: '0'
+        run: python vpngate.py
+
+      - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload Pages artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'public'
+          path: public
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
       - name: Show site URL
-        run: echo "site: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ (deploy outcome: ${{ steps.deployment.outcome }})"
+        run: |
+          echo "订阅地址：https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/nodes.txt"
+          echo "仪表盘：  https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"

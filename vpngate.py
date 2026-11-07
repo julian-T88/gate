@@ -58,6 +58,16 @@ PLACEHOLDER_MARKERS = ("你的", "YOUR_", "YOUR-", "example.com", "yourdomain")
 
 # 静态优选域名池（可用 EDGE_HOSTS 整体覆盖）
 DEFAULT_EDGE_HOSTS = [
+    "103.7.137.51:443#LAX-US-North America-Los Angeles-AS35916-MULTACOM CORPORATION",
+    "163.47.41.102:443#LAX-US-North America-Los Angeles-AS35916-MULTACOM CORPORATION",
+    "64.112.42.110:443#LAX-US-North America-Los Angeles-AS35916-MULTACOM CORPORATION",
+    "23.246.154.231:443#SJC-US-North America-San Jose-AS402681-AYIT",
+    "172.64.79.182:443#SJC-CN-North America-San Jose-AS4837-CHINA UNICOM China169 Backbone",
+    "45.15.124.89:8443#SJC-US-North America-San Jose-AS18779-EGIHosting",
+    "192.9.247.254:443#SJC-US-North America-San Jose-AS31898-Oracle Corporation",
+    "138.2.236.17:443#SJC-US-North America-San Jose-AS31898-Oracle Corporation",
+    "147.224.59.149:443#SJC-US-North America-San Jose-AS31898-Oracle Corporation",
+    "173.249.199.89:8443#SJC-US-North America-San Jose-AS11878-tzulo, inc.",
     "saas.sin.fan:443",
     "www.mfyx.cn:443",
     "cf.nyanya.moe:443",
@@ -72,6 +82,7 @@ DEFAULT_EDGE_HOSTS = [
     "best.hzample.kdns.fr:443",
     "ctsg.cfyx.aliyun.20237737.xyz:443",
     "china-unicom.cname.cloudflare.468123.xyz:443",
+    "117.55.227.224:443#LAX-US-North America-Los Angeles-AS35916-MULTACOM CORPORATION",
 ]
 
 DATA_CENTER_ORG_KEYWORDS = [
